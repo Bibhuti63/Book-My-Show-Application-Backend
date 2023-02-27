@@ -3,6 +3,8 @@ package com.example.BookMyShow.Models;
 import com.example.BookMyShow.Enums.Genre;
 import com.example.BookMyShow.Enums.Language;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +15,8 @@ import java.util.List;
 @Table(name = "movie")
 @Data //combination of @Getter,@Setter,@EqualsAndHashCode,@ToString,@RequiredArgsConstructor
 @NoArgsConstructor
-//@AllArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

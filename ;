@@ -1,0 +1,89 @@
+[1mdiff --git a/src/main/java/com/example/BookMyShow/Controllers/UserController.java b/src/main/java/com/example/BookMyShow/Controllers/UserController.java[m
+[1mindex 5b7d82d..d0d8014 100644[m
+[1m--- a/src/main/java/com/example/BookMyShow/Controllers/UserController.java[m
+[1m+++ b/src/main/java/com/example/BookMyShow/Controllers/UserController.java[m
+[36m@@ -3,6 +3,8 @@[m [mpackage com.example.BookMyShow.Controllers;[m
+ import com.example.BookMyShow.EntryDtos.UserEntryDto;[m
+ import com.example.BookMyShow.Services.UserService;[m
+ import org.springframework.beans.factory.annotation.Autowired;[m
+[32m+[m[32mimport org.springframework.http.HttpStatus;[m
+[32m+[m[32mimport org.springframework.http.ResponseEntity;[m
+ import org.springframework.web.bind.annotation.RequestBody;[m
+ import org.springframework.web.bind.annotation.RequestMapping;[m
+ import org.springframework.web.bind.annotation.RestController;[m
+[36m@@ -14,7 +16,17 @@[m [mpublic class UserController {[m
+     @Autowired[m
+     UserService userService;[m
+ [m
+[31m-    public String addUser(@RequestBody UserEntryDto userEntryDto){[m
+[31m-        return userService.addUser(userEntryDto);[m
+[32m+[m[32m//    public String addUser(@RequestBody UserEntryDto userEntryDto){[m
+[32m+[m[32m//        return userService.addUser(userEntryDto);[m
+[32m+[m[32m//    }[m
+[32m+[m[32m    public ResponseEntity<String> addUser(@RequestBody UserEntryDto userEntryDto){[m
+[32m+[m[32m        try{[m
+[32m+[m[32m            String response=userService.addUser(userEntryDto);[m
+[32m+[m[32m            return new ResponseEntity<>(response, HttpStatus.CREATED);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        catch (Exception e){[m
+[32m+[m[32m            return new ResponseEntity<>("User could not added",HttpStatus.BAD_REQUEST);[m
+[32m+[m[32m        }[m
+     }[m
+[32m+[m
+ }[m
+[1mdiff --git a/src/main/java/com/example/BookMyShow/Models/Movie.java b/src/main/java/com/example/BookMyShow/Models/Movie.java[m
+[1mindex 6c0d6a2..3aed207 100644[m
+[1m--- a/src/main/java/com/example/BookMyShow/Models/Movie.java[m
+[1m+++ b/src/main/java/com/example/BookMyShow/Models/Movie.java[m
+[36m@@ -3,6 +3,8 @@[m [mpackage com.example.BookMyShow.Models;[m
+ import com.example.BookMyShow.Enums.Genre;[m
+ import com.example.BookMyShow.Enums.Language;[m
+ import jakarta.persistence.*;[m
+[32m+[m[32mimport lombok.AllArgsConstructor;[m
+[32m+[m[32mimport lombok.Builder;[m
+ import lombok.Data;[m
+ import lombok.NoArgsConstructor;[m
+ [m
+[36m@@ -13,7 +15,8 @@[m [mimport java.util.List;[m
+ @Table(name = "movie")[m
+ @Data //combination of @Getter,@Setter,@EqualsAndHashCode,@ToString,@RequiredArgsConstructor[m
+ @NoArgsConstructor[m
+[31m-//@AllArgsConstructor[m
+[32m+[m[32m@Builder[m
+[32m+[m[32m@AllArgsConstructor[m
+ public class Movie {[m
+     @Id[m
+     @GeneratedValue(strategy = GenerationType.IDENTITY)[m
+[1mdiff --git a/src/main/java/com/example/BookMyShow/Services/UserService.java b/src/main/java/com/example/BookMyShow/Services/UserService.java[m
+[1mindex dbc4141..c327842 100644[m
+[1m--- a/src/main/java/com/example/BookMyShow/Services/UserService.java[m
+[1m+++ b/src/main/java/com/example/BookMyShow/Services/UserService.java[m
+[36m@@ -1,5 +1,6 @@[m
+ package com.example.BookMyShow.Services;[m
+ [m
+[32m+[m[32mimport com.example.BookMyShow.Converters.UserConvertor;[m
+ import com.example.BookMyShow.EntryDtos.UserEntryDto;[m
+ import com.example.BookMyShow.Models.User;[m
+ import com.example.BookMyShow.Repositories.UserRepository;[m
+[36m@@ -11,7 +12,7 @@[m [mpublic class UserService {[m
+     @Autowired[m
+     UserRepository userRepository;[m
+ [m
+[31m-    public String addUser(UserEntryDto userEntryDto) {[m
+[32m+[m[32m    public String addUser(UserEntryDto userEntryDto)throws Exception {[m
+         //convert EntryDto -> Entity[m
+         /*[m
+           1.Traditional Way:[m
+[36m@@ -23,8 +24,10 @@[m [mpublic class UserService {[m
+             @Builder need to written at top of the class whose object to be created (here:User)[m
+ [m
+          */[m
+[31m-        User user=User.builder().age(userEntryDto.getAge()).mobNo(userEntryDto.getMobNo()).email(userEntryDto.getEmail())[m
+[31m-                .address(userEntryDto.getAddress()).name(userEntryDto.getName()).build();[m
+[32m+[m[32m//        User user=User.builder().age(userEntryDto.getAge()).mobNo(userEntryDto.getMobNo()).email(userEntryDto.getEmail())[m
+[32m+[m[32m//                .address(userEntryDto.getAddress()).name(userEntryDto.getName()).build();[m
+[32m+[m
+[32m+[m[32m        User user= UserConvertor.convertDtoToEntity(userEntryDto);[m
+ [m
+         userRepository.save(user);[m
+ [m
