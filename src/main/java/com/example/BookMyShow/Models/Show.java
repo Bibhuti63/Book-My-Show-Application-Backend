@@ -2,6 +2,8 @@ package com.example.BookMyShow.Models;
 
 import com.example.BookMyShow.Enums.ShowType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,6 +19,8 @@ import java.util.List;
 @Table(name = "shows") //naming the table "show" will not work bcz show is a predefined command.
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Show {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
