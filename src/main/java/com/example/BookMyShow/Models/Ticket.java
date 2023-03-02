@@ -1,6 +1,8 @@
 package com.example.BookMyShow.Models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,8 @@ import java.util.UUID;
 @Table(name = "ticket")
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +26,7 @@ public class Ticket {
     private int totalAmount;
     private String ticketId= UUID.randomUUID().toString();
     private String theatreName;
+    private String bookedSeats;
 
 
     //this is child w.r.t user
