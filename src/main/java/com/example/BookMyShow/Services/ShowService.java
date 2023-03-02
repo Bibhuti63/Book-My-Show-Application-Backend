@@ -40,6 +40,9 @@ public class ShowService {
         show.setShowSeatList(showSeatList);
 
         //we also need to update parent entities
+
+        Show tempShow=showRepository.save(show); //as save function returns entity.
+
         movie.getShowList().add(show);
         theater.getShowList().add(show);
 
@@ -68,9 +71,9 @@ public class ShowService {
                 showSeat.setPrice(showEntryDto.getPremiumPrice());
             }
             showSeat.setBooked(false);
+
             //adding the foreign key
             showSeat.setShow(show);
-
 
             //add to the list
             showSeatList.add(showSeat);
