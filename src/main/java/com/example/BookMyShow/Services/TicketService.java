@@ -11,8 +11,11 @@ import com.example.BookMyShow.Repositories.ShowRepository;
 import com.example.BookMyShow.Repositories.TicketRepository;
 import com.example.BookMyShow.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +28,10 @@ public class TicketService {
     ShowRepository showRepository;
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    JavaMailSender javaMailSender;
+
 
     public String bookTicket(TicketEntryDto ticketEntryDto) throws Exception {
         //convert dto-> entity
@@ -76,6 +83,26 @@ public class TicketService {
 
         user.getBookedTickets().add(tempTicket);
         userRepository.save(user);
+
+        //to send mail
+        String body="Dear "+tempTicket.getUser().getName()+",\n"+
+                "\nThank you for visiting BookMyShow App. Your Ticket has been booked and details are indicated below. \n"+
+                "\n\nTicket Id:"+tempTicket.getTicketId()+
+                "\nMovie Name:"+tempTicket.getMovieName()+
+                "\nTheater Name: "+tempTicket.getTheatreName()+tempTicket.getTotalAmount()+
+                "\nPlease find your Seat No : ["+tempTicket.getBookedSeats()+"]"+
+                "\nTicket fee: "+tempTicket.getTotalAmount()+
+                "\n\nWarm Regards"+
+                "\nTeam Book My Show";
+
+        MimeMessage mimeMessage=javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(mimeMessage,true);
+        mimeMessageHelper.setFrom("bookmyshow684@gmail.com");
+        mimeMessageHelper.setTo(user.getEmail());
+        mimeMessageHelper.setText(body);
+        mimeMessageHelper.setSubject("Ticket Booking Confirmation at "+tempTicket.getTheatreName());
+
+        javaMailSender.send(mimeMessage);
 
 
         return "Ticket Booked Successfully for Seat No"+allotedSeats+" for Movie : "+tempTicket.getMovieName() ;
