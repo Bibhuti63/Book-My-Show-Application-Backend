@@ -2,7 +2,7 @@ package com.example.BookMyShow.Models;
 
 import com.example.BookMyShow.Enums.Genre;
 import com.example.BookMyShow.Enums.Language;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

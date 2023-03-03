@@ -1,6 +1,6 @@
 package com.example.BookMyShow.Models;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
